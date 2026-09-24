@@ -1,0 +1,7 @@
+# Tested on Python 3.12 (macOS arm64, CPU) with TensorFlow backend
+tensorflow==2.21.0
+keras==3.15.1
+numpy
+pandas
+matplotlib
+scikit-learn

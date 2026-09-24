@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+data/
+*.weights.h5
+*.keras
+jena_climate_2009_2016.csv*
+artifacts/
