@@ -182,7 +182,9 @@ class EpochLog(keras.callbacks.Callback):
         row["epoch_time_s"] = time.perf_counter() - self.t0
         row["session"] = self.session
         self.rows.append(row)
-        pd.DataFrame(self.rows).to_csv(self.path, index=False)
+        tmp = self.path.with_suffix(".tmp")  # atomic replace: a resume reads this file
+        pd.DataFrame(self.rows).to_csv(tmp, index=False)
+        tmp.replace(self.path)
 
 
 class ResumableEarlyStopping(keras.callbacks.EarlyStopping):
@@ -361,7 +363,7 @@ def train_and_report(model, data, args, model_kind: str) -> dict:
     model.save_weights(art_dir / "model.weights.h5")  # best-val_loss weights (EarlyStopping restores them at train end)
 
     test_loss, test_acc = model.evaluate(x_test, y_test, verbose=args.verbose)
-    probs = model.predict(x_test, batch_size=256, verbose=0)
+    probs = model.predict(x_test, batch_size=64, verbose=0)  # fit's batch: bounds the (batch, 4, 500, 500) attention tensors
     pred = probs.argmax(1)
 
     hist = pd.DataFrame(epoch_log.rows)

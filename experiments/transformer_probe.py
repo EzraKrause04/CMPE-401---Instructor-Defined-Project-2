@@ -164,6 +164,7 @@ def probe_model(model, x, y, batch_size: int) -> dict:
             # AUC of the float32 pooled scalar: its few distinct values are rounding ties (see notes)
             "channels_last_label_auc": auc(y, pooled_last),
             "series_mean_float64_abs_max": float(np.abs(series_mean).max()),
+            "series_mean_float64_std_across_samples": float(series_mean.std()),
             "series_mean_float64_label_auc": auc(y, series_mean),
             "channels_first_std_across_samples_mean": float(pooled_first.std(0).mean()),
             "channels_first_minus_x_plus_C_max_abs": float(np.abs(pooled_first - (x32[..., 0] + C)).max()),
@@ -322,15 +323,17 @@ def main() -> None:
         "only the betas and the MLP head learn. 'weight_change_max_abs' compares saved initial and final "
         "weights of a trained run: 0 for a group means fit() never moved it.",
         "channels_last pooling averages over time: pooled = C + mean_t(x). FordA series are z-normalized "
-        "per series (d_forda_series_stats: |mean_t(x)| <~ 1e-8, std = 1 with ddof=1), so in exact arithmetic "
-        "the pooled scalar is C for every series up to ~1e-8, versus ~1 per feature under channels_first. "
-        "In float32 that residue is below one ulp of C ('channels_last_ulp_at_value', ~6e-8 for |C| ~ 0.5-1), "
-        "so the observed across-sample spread ('channels_last_range_in_ulps', a few ulps over "
-        "'channels_last_unique_float32_values' distinct values) is rounding in the 500-step float32 sum, "
-        "not the series mean. 'channels_last_label_auc' is computed on those rounding ties and is not a "
-        "measure of information content; 'series_mean_float64_label_auc' is the AUC of the exact float64 "
-        "per-series mean, the quantity the pooled scalar would carry in exact arithmetic. The head would "
-        "need weights ~1e8 to use a 1e-8 residue even then.",
+        "per series (d_forda_series_stats: |mean_t(x)| <~ 1e-8), so in exact arithmetic the pooled scalar "
+        "is C for every series up to ~1e-8 (across-sample std 'series_mean_float64_std_across_samples', "
+        "~1e-9), versus ~1 per feature under channels_first. In float32 that residue is at or below "
+        "rounding: forming x + C and averaging 500 steps adds errors of ~1e-9 or more (ulp ~1e-7 at "
+        "|x| ~ 1), and when |C| ~ 0.5-1 (random betas) one ulp of C ('channels_last_ulp_at_value', ~6e-8) "
+        "exceeds the whole residue ('channels_last_range_in_ulps', 'channels_last_unique_float32_values'). "
+        "So a float32 spread ('channels_last_std_across_samples') larger than the exact one is rounding, "
+        "not signal, and 'channels_last_label_auc', computed on those float32 values, is not a measure of "
+        "information content; 'series_mean_float64_label_auc' is the AUC of the exact float64 per-series "
+        "mean, the quantity the pooled scalar carries in exact arithmetic. The head would need weights "
+        "~1e8 to use a 1e-8 residue even then.",
         "channels_first pooling averages over the size-1 feature axis: pooled = x + C (all 500 steps), "
         "so the model is the MLP head applied to the raw signal plus a constant; "
         "'mlp_on_x_plus_C_*' compares the full model with exactly that computation (differences are "
