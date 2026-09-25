@@ -1,0 +1,93 @@
+{
+  "variant": "V7_time_features",
+  "change": "+ sin/cos hour-of-day and day-of-year",
+  "overrides": {
+    "time_features": true
+  },
+  "seed": 1,
+  "config": {
+    "units": [
+      32
+    ],
+    "past": 720,
+    "lr": 0.001,
+    "batch": 256,
+    "epochs": 10,
+    "es_patience": 5,
+    "dropout": 0.0,
+    "clean_wv": false,
+    "time_features": true,
+    "reduce_lr": false,
+    "shuffle": false,
+    "epochs_effective": 10,
+    "future": 72,
+    "step": 6
+  },
+  "smoke": false,
+  "max_epochs": null,
+  "max_train_windows": null,
+  "threads": 4,
+  "params": 5665,
+  "input_shape": [
+    120,
+    11
+  ],
+  "features": [
+    "p (mbar)",
+    "T (degC)",
+    "VPmax (mbar)",
+    "VPdef (mbar)",
+    "sh (g/kg)",
+    "rho (g/m**3)",
+    "wv (m/s)",
+    "hour_sin",
+    "hour_cos",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "epochs_run": 6,
+  "best_epoch": 1,
+  "early_stopped": true,
+  "train_time_s": 84.77955628500013,
+  "seconds_per_epoch": 14.126551516500058,
+  "val_mse": 0.1179517576574033,
+  "val_mae_C": 2.3408154840371154,
+  "val_rmse_C": 2.9656188747374617,
+  "test_mse": 0.1020689220994115,
+  "test_mae_C": 2.1849364816244377,
+  "test_rmse_C": 2.7587344160101104,
+  "best_logged_val_loss": 0.11795172095298767,
+  "n_windows": {
+    "train": 299901,
+    "val": 58417,
+    "test": 58417
+  },
+  "label_rows": {
+    "train": [
+      792,
+      300692
+    ],
+    "val": [
+      302205,
+      360621
+    ],
+    "test": [
+      362134,
+      420550
+    ]
+  },
+  "t_mean": 9.250203962180695,
+  "t_std": 8.635015642805945,
+  "weights": "artifacts/lstm_benchmark/V7_time_features/seed1.weights.h5",
+  "versions": {
+    "python": "3.13.15",
+    "tensorflow": "2.20.0",
+    "keras": "3.13.2",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "platform": "Linux x86_64",
+    "gpus": [
+      "/device:GPU:0"
+    ]
+  }
+}

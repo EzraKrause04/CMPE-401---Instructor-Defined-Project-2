@@ -1,0 +1,70 @@
+{
+  "run_name": "T3_fixed",
+  "model": "fixed",
+  "test_loss": 0.6944316625595093,
+  "test_acc": 0.4840908944606781,
+  "majority_class_test_acc": 0.5159090909090909,
+  "majority_class_val_acc": 0.5187239944521498,
+  "constant_predictor_test_acc": [
+    0.5159090909090909,
+    0.48409090909090907
+  ],
+  "constant_predictor_val_acc": [
+    0.4812760055478502,
+    0.5187239944521498
+  ],
+  "test_pred_class_fractions": [
+    0.0,
+    1.0
+  ],
+  "test_prob_class1_std": 2.6088515369337983e-05,
+  "params": {
+    "total": 1105170,
+    "trainable": 1105170
+  },
+  "pooled_feature_shape": [
+    null,
+    64
+  ],
+  "jit_compile": true,
+  "epochs_run": 16,
+  "early_stopped": true,
+  "best_epoch": 6,
+  "best_val_loss": 0.6924844980239868,
+  "best_val_acc": 0.5187239646911621,
+  "train_acc_at_best": 0.5222222208976746,
+  "wall_time_s": 380.990550255,
+  "epoch_time_total_s": 363.9325352420001,
+  "total_time_s": 395.7102659540001,
+  "seconds_per_epoch": 22.745783452625005,
+  "seconds_per_epoch_median": 20.851354114999822,
+  "first_epoch_s": 50.654047999999875,
+  "sessions": 1,
+  "resumed_at_epoch": [],
+  "n_train": 2880,
+  "n_val": 721,
+  "n_test": 1320,
+  "versions": {
+    "python": "3.13.15",
+    "tensorflow": "2.20.0",
+    "keras": "3.13.2",
+    "numpy": "2.1.3",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "backend": "tensorflow",
+    "gpus": [
+      "/device:GPU:0"
+    ]
+  },
+  "args": {
+    "run_name": "T3_fixed",
+    "seed": 42,
+    "threads": 4,
+    "epochs": 150,
+    "blocks": 4,
+    "max_train_samples": null,
+    "verbose": 2,
+    "overwrite": false,
+    "d_model": 64
+  },
+  "command": "transformer_fixed.py --run-name T3_fixed"
+}

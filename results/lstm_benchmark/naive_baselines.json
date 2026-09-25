@@ -1,0 +1,76 @@
+{
+  "protocol": {
+    "past": 720,
+    "future": 72,
+    "step": 6,
+    "eval_past": 1440,
+    "n_windows": {
+      "train": 299901,
+      "val": 58417,
+      "test": 58417
+    },
+    "label_rows": {
+      "train": [
+        792,
+        300692
+      ],
+      "val": [
+        302205,
+        360621
+      ],
+      "test": [
+        362134,
+        420550
+      ]
+    },
+    "t_mean": 9.250203962180695,
+    "t_std": 8.635015642805945,
+    "wv_sentinel_windows": {
+      "val": 732,
+      "test": 0
+    }
+  },
+  "baselines": {
+    "persistence": {
+      "description": "T at the last input row (label row - 78)",
+      "val_mse": 0.46921278965842983,
+      "val_mae_C": 4.592023211447604,
+      "val_rmse_C": 5.9149087538794465,
+      "test_mse": 0.3955811449323855,
+      "test_mae_C": 4.22215947746823,
+      "test_rmse_C": 5.431013973669381
+    },
+    "seasonal_24h": {
+      "description": "T 24 h before the label row (label row - 144)",
+      "val_mse": 0.1639875815672304,
+      "val_mae_C": 2.6760348847257873,
+      "val_rmse_C": 3.4967824128897336,
+      "test_mse": 0.14224919150080087,
+      "test_mae_C": 2.49674683887278,
+      "test_rmse_C": 3.256777072624904
+    },
+    "ridge": {
+      "description": "Ridge(alpha=1.0) on flattened 120x7 windows, 50000 random train windows (seed 0), wv sentinels zeroed",
+      "n_fit_windows": 50000,
+      "fit_time_s": 1.118345214999863,
+      "val_mse": 0.11148021821468371,
+      "val_mae_C": 2.224397732411576,
+      "val_rmse_C": 2.883115452134913,
+      "test_mse": 0.09778223864935094,
+      "test_mae_C": 2.111569827420165,
+      "test_rmse_C": 2.7001824896539905
+    }
+  },
+  "versions": {
+    "python": "3.13.15",
+    "tensorflow": "2.20.0",
+    "keras": "3.13.2",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "platform": "Linux x86_64",
+    "gpus": [
+      "/device:GPU:0"
+    ],
+    "scikit-learn": "1.6.1"
+  }
+}

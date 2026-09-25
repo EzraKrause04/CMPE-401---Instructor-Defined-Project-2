@@ -1,0 +1,432 @@
+{
+  "n_test_probed": 1320,
+  "seed": 42,
+  "a_architecture": {
+    "channels_last_4_blocks": {
+      "params": 29258,
+      "pooled_feature_shape": [
+        null,
+        1
+      ]
+    },
+    "channels_first_4_blocks": {
+      "params": 93130,
+      "pooled_feature_shape": [
+        null,
+        500
+      ]
+    },
+    "channels_first_0_blocks": {
+      "params": 64386,
+      "pooled_feature_shape": [
+        null,
+        500
+      ]
+    },
+    "expected": {
+      "channels_last_4_blocks": 29258,
+      "channels_first_4_blocks": 93130
+    }
+  },
+  "b_random_init": {
+    "pooling": "channels_last",
+    "params": 29258,
+    "pooled_feature_shape": [
+      null,
+      1
+    ],
+    "n_samples": 1320,
+    "encoder": {
+      "sum_layernorm_betas": 0.6281104143708944,
+      "layernorm_betas": [
+        0.304717093706131,
+        0.7504512071609497,
+        -1.9510351419448853,
+        0.12784039974212646,
+        -0.01680115796625614,
+        0.879397988319397,
+        0.06603069603443146,
+        0.46750932931900024
+      ],
+      "layernorm_gammas": [
+        0.48000794649124146,
+        1.4702823162078857,
+        0.34891024231910706,
+        0.8418787121772766,
+        0.5734780430793762,
+        1.3888959884643555,
+        1.5636205673217773,
+        0.5703537464141846
+      ],
+      "residual_mean": 0.6281102707231586,
+      "residual_std_over_time_max": 3.946186739274581e-05,
+      "residual_mean_std_across_samples": 3.1238264427538094e-06,
+      "residual_minus_sum_betas_max_abs": 0.00014805234968662262,
+      "input_std_over_time_mean": 0.9989994168281555,
+      "layernorm_out_minus_beta_max_abs": [
+        2.9802322387695312e-08,
+        3.707408905029297e-05,
+        5.960464477539062e-07,
+        8.928775787353516e-05,
+        1.2312084436416626e-06,
+        3.4570693969726562e-06,
+        7.599592208862305e-07,
+        1.996755599975586e-05
+      ],
+      "layernorm_rounding_bound": [
+        1.4901161193847656e-07,
+        0.0002442002296447754,
+        3.933906555175781e-06,
+        0.0004882961511611938,
+        3.816559910774231e-06,
+        0.0002442002296447754,
+        1.914799213409424e-06,
+        0.0001221001148223877
+      ],
+      "layernorm_input_max_abs": [
+        0.003076873254030943,
+        2.1120190620422363,
+        0.11760154366493225,
+        4.982962131500244,
+        0.06886672228574753,
+        1.782170057296753,
+        0.010763331316411495,
+        2.0787861347198486
+      ]
+    },
+    "pooled": {
+      "channels_last_value_mean": 0.6281102299690247,
+      "channels_last_std_across_samples": 3.1249244329956127e-06,
+      "channels_last_range": 2.1338462829589844e-05,
+      "channels_last_unique_float32_values": 242,
+      "channels_last_ulp_at_value": 5.960464477539063e-08,
+      "channels_last_range_in_ulps": 358.0,
+      "channels_last_label_auc": 0.5122840157275846,
+      "series_mean_float64_abs_max": 1.1638800003765937e-08,
+      "series_mean_float64_std_across_samples": 9.199391614646756e-10,
+      "series_mean_float64_label_auc": 0.4899703326829963,
+      "channels_first_std_across_samples_mean": 0.9983468055725098,
+      "channels_first_minus_x_plus_C_max_abs": 0.00014829635620117188,
+      "this_model_pooled_std_across_samples_mean": 3.1249244329956127e-06
+    },
+    "predictions": {
+      "prob_class1_std_across_samples": 1.7323298351357153e-08,
+      "pred_class_fractions": [
+        1.0,
+        0.0
+      ],
+      "accuracy": 0.5159090909090909,
+      "mlp_on_x_plus_C_max_abs_prob_diff": 8.940696716308594e-08,
+      "mlp_on_x_plus_C_argmax_agreement": 1.0
+    },
+    "execution_modes_train_batch": {
+      "graph_eval": {
+        "residual_std_over_time_max": 1.1953666501085536e-07,
+        "layernorm_out_minus_beta_max_abs": 0.0
+      },
+      "graph_train": {
+        "residual_std_over_time_max": 1.1953666501085536e-07,
+        "layernorm_out_minus_beta_max_abs": 0.0
+      },
+      "eager_eval": {
+        "residual_std_over_time_max": 3.819583434960805e-05,
+        "layernorm_out_minus_beta_max_abs": 8.928775787353516e-05
+      },
+      "eager_train": {
+        "residual_std_over_time_max": 4.19125753978733e-05,
+        "layernorm_out_minus_beta_max_abs": 8.928775787353516e-05
+      }
+    },
+    "gradient_max_abs": {
+      "MultiHeadAttention": 0.0,
+      "LayerNormalization.gamma": 0.0,
+      "LayerNormalization.beta": 0.0001623709686100483,
+      "Conv1D": 0.0,
+      "Dense": 0.07021162658929825
+    }
+  },
+  "b_trained": {
+    "T0_official": {
+      "pooling": "channels_last",
+      "params": 29258,
+      "pooled_feature_shape": [
+        null,
+        1
+      ],
+      "n_samples": 1320,
+      "encoder": {
+        "sum_layernorm_betas": -0.021065453067421913,
+        "layernorm_betas": [
+          -0.002633181633427739,
+          -0.002633181633427739,
+          -0.002633181633427739,
+          -0.002633181633427739,
+          -0.002633181633427739,
+          -0.002633181633427739,
+          -0.002633181633427739,
+          -0.002633181633427739
+        ],
+        "layernorm_gammas": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "residual_mean": -0.02107164277331057,
+        "residual_std_over_time_max": 4.840221020734614e-05,
+        "residual_mean_std_across_samples": 1.948687062550808e-06,
+        "residual_minus_sum_betas_max_abs": 0.00020935200154781342,
+        "input_std_over_time_mean": 0.9989994168281555,
+        "layernorm_out_minus_beta_max_abs": [
+          8.684583008289337e-08,
+          5.236524157226086e-05,
+          1.5157274901866913e-07,
+          5.236524157226086e-05,
+          3.236345946788788e-08,
+          5.236524157226086e-05,
+          8.684583008289337e-08,
+          5.236524157226086e-05
+        ],
+        "layernorm_rounding_bound": [
+          4.770699888467789e-07,
+          0.00012207054533064365,
+          9.539071470499039e-07,
+          0.00024414085783064365,
+          1.1944212019443512e-07,
+          0.00024414085783064365,
+          4.770699888467789e-07,
+          0.00024414085783064365
+        ],
+        "layernorm_input_max_abs": [
+          0.004655653610825539,
+          1.89614999294281,
+          0.014113020151853561,
+          3.9578583240509033,
+          0.0015450818464159966,
+          3.9757163524627686,
+          0.00690116360783577,
+          2.3908779621124268
+        ]
+      },
+      "pooled": {
+        "channels_last_value_mean": -0.021071642637252808,
+        "channels_last_std_across_samples": 1.9486537894408684e-06,
+        "channels_last_range": 1.7717480659484863e-05,
+        "channels_last_unique_float32_values": 1015,
+        "channels_last_ulp_at_value": 1.862645149230957e-09,
+        "channels_last_range_in_ulps": 9512.0,
+        "channels_last_label_auc": 0.4611705146854369,
+        "series_mean_float64_abs_max": 1.1638800003765937e-08,
+        "series_mean_float64_std_across_samples": 9.199391614646756e-10,
+        "series_mean_float64_label_auc": 0.4899703326829963,
+        "channels_first_std_across_samples_mean": 0.9983370900154114,
+        "channels_first_minus_x_plus_C_max_abs": 0.00020933151245117188,
+        "this_model_pooled_std_across_samples_mean": 1.9486537894408684e-06
+      },
+      "predictions": {
+        "prob_class1_std_across_samples": 6.938052621308088e-08,
+        "pred_class_fractions": [
+          1.0,
+          0.0
+        ],
+        "accuracy": 0.5159090909090909,
+        "mlp_on_x_plus_C_max_abs_prob_diff": 5.960464477539062e-07,
+        "mlp_on_x_plus_C_argmax_agreement": 1.0
+      },
+      "gradient_max_abs": {
+        "MultiHeadAttention": 0.0,
+        "LayerNormalization.gamma": 0.0,
+        "LayerNormalization.beta": 0.01341342180967331,
+        "Conv1D": 0.0,
+        "Dense": 0.07585179805755615
+      },
+      "execution_modes_train_batch": {
+        "graph_eval": {
+          "residual_std_over_time_max": 2.423053899747174e-07,
+          "layernorm_out_minus_beta_max_abs": 0.0
+        },
+        "graph_train": {
+          "residual_std_over_time_max": 2.423053899747174e-07,
+          "layernorm_out_minus_beta_max_abs": 0.0
+        },
+        "eager_eval": {
+          "residual_std_over_time_max": 4.5651697291759774e-05,
+          "layernorm_out_minus_beta_max_abs": 5.236524157226086e-05
+        },
+        "eager_train": {
+          "residual_std_over_time_max": 5.05990392412059e-05,
+          "layernorm_out_minus_beta_max_abs": 0.00019177538342773914
+        }
+      },
+      "weight_change_max_abs": {
+        "MultiHeadAttention": 0.0,
+        "LayerNormalization.gamma": 0.0,
+        "LayerNormalization.beta": 0.002633181633427739,
+        "Conv1D": 0.0,
+        "Dense": 0.002014756202697754
+      },
+      "summary_test_acc": 0.5159090757369995,
+      "weights": "artifacts/transformer/T0_official/model.weights.h5"
+    },
+    "T1_page_version": {
+      "pooling": "channels_first",
+      "params": 93130,
+      "pooled_feature_shape": [
+        null,
+        500
+      ],
+      "n_samples": 1320,
+      "encoder": {
+        "sum_layernorm_betas": 0.19288738071918488,
+        "layernorm_betas": [
+          0.02411092258989811,
+          0.02411092258989811,
+          0.02411092258989811,
+          0.02411092258989811,
+          0.02411092258989811,
+          0.02411092258989811,
+          0.02411092258989811,
+          0.02411092258989811
+        ],
+        "layernorm_gammas": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "residual_mean": 0.19290490101481025,
+        "residual_std_over_time_max": 5.5072154582354794e-05,
+        "residual_mean_std_across_samples": 1.1950326622651777e-06,
+        "residual_minus_sum_betas_max_abs": 0.0002361983060836792,
+        "input_std_over_time_mean": 0.9989994168281555,
+        "layernorm_out_minus_beta_max_abs": [
+          1.2852251529693604e-07,
+          5.8999285101890564e-05,
+          1.2852251529693604e-07,
+          5.8999285101890564e-05,
+          1.2852251529693604e-07,
+          0.00018514133989810944,
+          1.2852251529693604e-07,
+          5.8999285101890564e-05
+        ],
+        "layernorm_rounding_bound": [
+          4.78699803352356e-07,
+          0.00012207217514514923,
+          1.909211277961731e-06,
+          0.00024414248764514923,
+          4.78699803352356e-07,
+          0.0004882831126451492,
+          1.909211277961731e-06,
+          0.00024414248764514923
+        ],
+        "layernorm_input_max_abs": [
+          0.004655653610825539,
+          1.9079089164733887,
+          0.0172625333070755,
+          3.888284683227539,
+          0.004435514099895954,
+          4.099503517150879,
+          0.023077405989170074,
+          2.495102643966675
+        ]
+      },
+      "pooled": {
+        "channels_last_value_mean": 0.19290490448474884,
+        "channels_last_std_across_samples": 1.1952079148613848e-06,
+        "channels_last_range": 9.5367431640625e-06,
+        "channels_last_unique_float32_values": 325,
+        "channels_last_ulp_at_value": 1.4901161193847656e-08,
+        "channels_last_range_in_ulps": 640.0,
+        "channels_last_label_auc": 0.5088622779259995,
+        "series_mean_float64_abs_max": 1.1638800003765937e-08,
+        "series_mean_float64_std_across_samples": 9.199391614646756e-10,
+        "series_mean_float64_label_auc": 0.4899703326829963,
+        "channels_first_std_across_samples_mean": 0.998351514339447,
+        "channels_first_minus_x_plus_C_max_abs": 0.00023603439331054688,
+        "this_model_pooled_std_across_samples_mean": 0.998351514339447
+      },
+      "predictions": {
+        "prob_class1_std_across_samples": 0.3949750065803528,
+        "pred_class_fractions": [
+          0.5159090909090909,
+          0.48409090909090907
+        ],
+        "accuracy": 0.8666666666666667,
+        "mlp_on_x_plus_C_max_abs_prob_diff": 0.00010192394256591797,
+        "mlp_on_x_plus_C_argmax_agreement": 1.0
+      },
+      "gradient_max_abs": {
+        "MultiHeadAttention": 0.0,
+        "LayerNormalization.gamma": 0.0,
+        "LayerNormalization.beta": 0.03548448532819748,
+        "Conv1D": 0.0,
+        "Dense": 0.05123402923345566
+      },
+      "execution_modes_train_batch": {
+        "graph_eval": {
+          "residual_std_over_time_max": 2.440799278247141e-07,
+          "layernorm_out_minus_beta_max_abs": 0.0
+        },
+        "graph_train": {
+          "residual_std_over_time_max": 2.440799278247141e-07,
+          "layernorm_out_minus_beta_max_abs": 0.0
+        },
+        "eager_eval": {
+          "residual_std_over_time_max": 5.082022471469827e-05,
+          "layernorm_out_minus_beta_max_abs": 6.307102739810944e-05
+        },
+        "eager_train": {
+          "residual_std_over_time_max": 5.59686595806852e-05,
+          "layernorm_out_minus_beta_max_abs": 0.00018514133989810944
+        }
+      },
+      "weight_change_max_abs": {
+        "MultiHeadAttention": 0.0,
+        "LayerNormalization.gamma": 0.0,
+        "LayerNormalization.beta": 0.02411092258989811,
+        "Conv1D": 0.0,
+        "Dense": 0.14305368065834045
+      },
+      "summary_test_acc": 0.8666666746139526,
+      "weights": "artifacts/transformer/T1_page_version/model.weights.h5"
+    }
+  },
+  "d_forda_series_stats": {
+    "train": {
+      "n_series": 3601,
+      "length": 500,
+      "mean_abs_max": 7.743400001203326e-09,
+      "mean_abs_median": 4.980000012366759e-10,
+      "std_min": 0.9989994924657005,
+      "std_max": 0.9989995084441645,
+      "std_mean": 0.9989994995183199,
+      "std_ddof1_mean": 1.0000000000189648
+    },
+    "test": {
+      "n_series": 1320,
+      "length": 500,
+      "mean_abs_max": 1.1638800003765937e-08,
+      "mean_abs_median": 5.220399958982824e-10,
+      "std_min": 0.998999493091695,
+      "std_max": 0.9989995050514041,
+      "std_mean": 0.9989994994945227,
+      "std_ddof1_mean": 0.9999999999951436
+    }
+  },
+  "notes": [
+    "LayerNormalization(axis=-1) over a size-1 feature axis: mean = x and var = 0, so the normalized value is 0 and the output is beta. Keras evaluates x*inv + (beta - mean*inv) with inv = gamma/sqrt(var + 1e-6); in graph execution (what fit/predict run, measured via tf.function) the output equals beta bitwise; in eager execution the two equal products of size |gamma*x|*1000 cancel only up to float32 rounding, so deviations up to 'layernorm_rounding_bound' (one ulp of that product plus one ulp of beta) are rounding, not signal. See 'execution_modes_train_batch'.",
+    "Hence each encoder block computes x + beta_attn + beta_ff and the stack computes x + C with C = sum of the LayerNorm betas. 'residual_std_over_time_max' is the largest per-series std over time of (output - input), i.e. float32 rounding of adding the betas to x (ulp ~1e-7 at |x| ~ 1); compare it with 'input_std_over_time_mean' (~1). Dropout (training mode) sits before the LayerNorms, so it does not change this.",
+    "The derivative of a size-1 LayerNorm w.r.t. its input is analytically 0, so attention, feed-forward Conv1D and LayerNorm gamma receive zero gradient ('gradient_max_abs', eager) and only the betas and the MLP head learn. 'weight_change_max_abs' compares saved initial and final weights of a trained run: 0 for a group means fit() never moved it.",
+    "channels_last pooling averages over time: pooled = C + mean_t(x). FordA series are z-normalized per series (d_forda_series_stats: |mean_t(x)| <~ 1e-8), so in exact arithmetic the pooled scalar is C for every series up to ~1e-8 (across-sample std 'series_mean_float64_std_across_samples', ~1e-9), versus ~1 per feature under channels_first. In float32 that residue is at or below rounding: forming x + C and averaging 500 steps adds errors of ~1e-9 or more (ulp ~1e-7 at |x| ~ 1), and when |C| ~ 0.5-1 (random betas) one ulp of C ('channels_last_ulp_at_value', ~6e-8) exceeds the whole residue ('channels_last_range_in_ulps', 'channels_last_unique_float32_values'). So a float32 spread ('channels_last_std_across_samples') larger than the exact one is rounding, not signal, and 'channels_last_label_auc', computed on those float32 values, is not a measure of information content; 'series_mean_float64_label_auc' is the AUC of the exact float64 per-series mean, the quantity the pooled scalar carries in exact arithmetic. The head would need weights ~1e8 to use a 1e-8 residue even then.",
+    "channels_first pooling averages over the size-1 feature axis: pooled = x + C (all 500 steps), so the model is the MLP head applied to the raw signal plus a constant; 'mlp_on_x_plus_C_*' compares the full model with exactly that computation (differences are float32 rounding of x + C).",
+    "Random-init probe: default initializers except LayerNorm beta ~ N(0,1) and gamma ~ N(1,0.5), so 'output == beta' is not trivially 'output == 0'."
+  ]
+}

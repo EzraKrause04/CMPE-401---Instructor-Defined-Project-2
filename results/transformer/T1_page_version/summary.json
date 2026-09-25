@@ -1,0 +1,70 @@
+{
+  "run_name": "T1_page_version",
+  "model": "official",
+  "test_loss": 0.3253173530101776,
+  "test_acc": 0.8666666746139526,
+  "majority_class_test_acc": 0.5159090909090909,
+  "majority_class_val_acc": 0.5187239944521498,
+  "constant_predictor_test_acc": [
+    0.5159090909090909,
+    0.48409090909090907
+  ],
+  "constant_predictor_val_acc": [
+    0.4812760055478502,
+    0.5187239944521498
+  ],
+  "test_pred_class_fractions": [
+    0.5159090909090909,
+    0.48409090909090907
+  ],
+  "test_prob_class1_std": 0.3949750065803528,
+  "params": {
+    "total": 93130,
+    "trainable": 93130
+  },
+  "pooled_feature_shape": [
+    null,
+    500
+  ],
+  "jit_compile": true,
+  "epochs_run": 150,
+  "early_stopped": false,
+  "best_epoch": 150,
+  "best_val_loss": 0.3063617944717407,
+  "best_val_acc": 0.8807212114334106,
+  "train_acc_at_best": 0.9541666507720947,
+  "wall_time_s": 2457.6167781699996,
+  "epoch_time_total_s": 2264.488643019,
+  "total_time_s": 2468.391749208,
+  "seconds_per_epoch": 15.09659095346,
+  "seconds_per_epoch_median": 14.83569642349994,
+  "first_epoch_s": 41.71393277100003,
+  "sessions": 1,
+  "resumed_at_epoch": [],
+  "n_train": 2880,
+  "n_val": 721,
+  "n_test": 1320,
+  "versions": {
+    "python": "3.13.15",
+    "tensorflow": "2.20.0",
+    "keras": "3.13.2",
+    "numpy": "2.1.3",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.39",
+    "backend": "tensorflow",
+    "gpus": [
+      "/device:GPU:0"
+    ]
+  },
+  "args": {
+    "run_name": "T1_page_version",
+    "seed": 42,
+    "threads": 4,
+    "epochs": 150,
+    "blocks": 4,
+    "max_train_samples": null,
+    "verbose": 2,
+    "overwrite": false,
+    "pooling": "channels_first"
+  },
+  "command": "transformer_official.py --run-name T1_page_version --pooling channels_first"
+}

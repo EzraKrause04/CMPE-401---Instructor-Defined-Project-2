@@ -1,0 +1,89 @@
+{
+  "variant": "V5_dropout02",
+  "change": "LSTM input dropout 0.2",
+  "overrides": {
+    "dropout": 0.2
+  },
+  "seed": 2,
+  "config": {
+    "units": [
+      32
+    ],
+    "past": 720,
+    "lr": 0.001,
+    "batch": 256,
+    "epochs": 10,
+    "es_patience": 5,
+    "dropout": 0.2,
+    "clean_wv": false,
+    "time_features": false,
+    "reduce_lr": false,
+    "shuffle": false,
+    "epochs_effective": 10,
+    "future": 72,
+    "step": 6
+  },
+  "smoke": false,
+  "max_epochs": null,
+  "max_train_windows": null,
+  "threads": 4,
+  "params": 5153,
+  "input_shape": [
+    120,
+    7
+  ],
+  "features": [
+    "p (mbar)",
+    "T (degC)",
+    "VPmax (mbar)",
+    "VPdef (mbar)",
+    "sh (g/kg)",
+    "rho (g/m**3)",
+    "wv (m/s)"
+  ],
+  "epochs_run": 6,
+  "best_epoch": 1,
+  "early_stopped": true,
+  "train_time_s": 75.16861492899989,
+  "seconds_per_epoch": 12.524820866833275,
+  "val_mse": 0.16883133181317023,
+  "val_mae_C": 2.808637591094984,
+  "val_rmse_C": 3.5480493501462425,
+  "test_mse": 0.16090178375888486,
+  "test_mae_C": 2.7011213008129937,
+  "test_rmse_C": 3.4637262266486726,
+  "best_logged_val_loss": 0.16883130371570587,
+  "n_windows": {
+    "train": 299901,
+    "val": 58417,
+    "test": 58417
+  },
+  "label_rows": {
+    "train": [
+      792,
+      300692
+    ],
+    "val": [
+      302205,
+      360621
+    ],
+    "test": [
+      362134,
+      420550
+    ]
+  },
+  "t_mean": 9.250203962180695,
+  "t_std": 8.635015642805945,
+  "weights": "artifacts/lstm_benchmark/V5_dropout02/seed2.weights.h5",
+  "versions": {
+    "python": "3.13.15",
+    "tensorflow": "2.20.0",
+    "keras": "3.13.2",
+    "numpy": "2.1.3",
+    "pandas": "2.2.3",
+    "platform": "Linux x86_64",
+    "gpus": [
+      "/device:GPU:0"
+    ]
+  }
+}
