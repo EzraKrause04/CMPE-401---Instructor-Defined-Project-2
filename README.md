@@ -1,5 +1,7 @@
 # CMPE 401 Project 2: Time-Series Benchmark (Transformer on FordA, LSTM on Jena Climate)
 
+**Authors:** Cole Robulack, Ezra Krause
+
 CMPE 401 (UBC Okanagan), Instructor-defined Project 2. We reproduced both official Keras time-series examples on a Colab T4 GPU and benchmarked controlled changes to the LSTM.
 
 The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses each z-normalized series to one constant, and a LayerNorm over a single feature turns every encoder block into `x + constant`. The ~85 % accuracy published on keras.io comes from an older version in which the encoder also contributes nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
