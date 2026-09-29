@@ -111,7 +111,7 @@ How the scripts treat existing results:
 - `lstm_benchmark.py` skips finished (variant, seed) pairs.
 - `lstm_official.py`, `naive_baselines.py` and `aggregate_lstm.py` overwrite their outputs.
 - For quick smoke tests, use `transformer_official.py --run-name smoke --epochs 1 --max-train-samples 256` and `lstm_official.py --max-rows 60000 --epochs 2`. The first one writes to `results/transformer/smoke/` (delete it afterwards; a second smoke run needs `--overwrite`). The second one writes to `artifacts/lstm/smoke/`.
-- Model weights go to `artifacts/`, which is git-ignored.
+- Training writes weights to `artifacts/`, which is git-ignored. The final weights of every reported model (except T3) are committed in [`models/`](models/README.md). `python experiments/verify_models.py` reloads them and re-scores all 45 against `results/`; they match.
 
 **Run time.** The notebook takes about 2-3 h on a T4. From the result files:
 - Transformer runs: 52 min in total including evaluation (51 min of fit time), of which T1 alone is 41 min.
@@ -453,6 +453,7 @@ experiments/
   lstm_benchmark.py            Task 2: single-change variants and --override combinations x seeds (resumable)
   naive_baselines.py           persistence, seasonal 24 h, ridge regression
   aggregate_lstm.py            Task 3: summary.csv/.md, test_mae.png, val_loss_curves.png
+  verify_models.py             reloads models/ and re-scores them against results/
 notebooks/colab_P2.ipynb       runs everything on a Colab GPU
 results/
   transformer/<run>/           T0-T3: summary.json, history.csv, curves.png, model_summary.txt
@@ -460,6 +461,7 @@ results/
   lstm/L0_official/            summary.json, history.csv, loss_curve.png, prediction_1..5.png, raw_features.png
   lstm_benchmark/<variant>/    seed{0,1,2}.json, history_seed{0,1,2}.csv (12 registry entries + C1, C2)
   lstm_benchmark/              naive_baselines.json, summary.csv, summary.md, test_mae.png, val_loss_curves.png
-data/, artifacts/              downloaded datasets and model weights (git-ignored)
+models/                        trained weights: T0-T2, L0_official, all 42 LSTM benchmark models (see models/README.md)
+data/, artifacts/              downloaded datasets and training outputs (git-ignored)
 requirements.txt               versions used for local testing
 ```

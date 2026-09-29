@@ -4,6 +4,8 @@ __pycache__/
 .ipynb_checkpoints/
 data/
 *.weights.h5
+# ...except the committed, verified models (see models/README.md)
+!models/**/*.weights.h5
 *.keras
 jena_climate_2009_2016.csv*
 artifacts/
