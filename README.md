@@ -2,11 +2,11 @@
 
 **Authors:** Cole Robulack, Ezra Krause
 
-CMPE 401 (UBC Okanagan), Instructor-defined Project 2. We reproduced both official Keras time-series examples on a Colab T4 GPU and benchmarked controlled changes to the LSTM.
+CMPE 401 (UBC Okanagan), Instructor-defined Project 2. Myself and Ezra Krause reproduced both official Keras time-series examples on a Colab T4 GPU and benchmarked controlled changes to the LSTM.
 
-The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses each z-normalized series to one constant, and a LayerNorm over a single feature turns every encoder block into `x + constant`. The ~85 % accuracy published on keras.io comes from an older version in which the encoder also contributes nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
+The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses each z-normalized series to a constant, and a LayerNorm over a single feature turns every encoder block into `x+constant`. The ~85 % accuracy published on keras.io comes from an older version in which the encoder also contributed nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
 
-For the LSTM, we moved the official model onto a leak-free train/val/test protocol. On that protocol, a ridge regression on the same inputs beats it (2.11 vs 2.43 °C test MAE). We then ran 11 single changes with 3 seeds each. Shuffling the training windows, a plateau learning-rate schedule (with a 30-epoch budget) and calendar features helped most. Combined (C1), they reach 1.92 ± 0.02 °C, 21 % below the baseline and 9 % below ridge. C1's selected weights come from epoch 1, before the schedule acts, so its result is due to shuffling and calendar features.
+For the LSTM, we moved the official model onto a leak-free train/val/test protocol. On that protocol, a ridge regression on the same inputs beats it (2.11 vs 2.43 °C test MAE). We then ran 11 single changes with 3 seeds each. Shuffling the training windows, a plateau learning-rate schedule (with a 30-epoch budget) and calendar features helped most from our testing. Combined (C1), they reach 1.92 ± 0.02 °C, which is 21% below the baseline and 9% below ridge. C1's selected weights come from epoch 1, before the schedule acts, so its result is due to shuffling and the added calendar features.
 
 ## Key results
 
