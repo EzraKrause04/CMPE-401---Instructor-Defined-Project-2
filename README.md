@@ -38,14 +38,14 @@ T1 and T2 are Task 1 diagnostics that explain T0's result, not Task 2 modificati
 
 ## Assignment map
 
-| Task (spec §5) | Section | Code | Results |
+| Task (spec 5) | Section | Code | Results |
 |---|---|---|---|
 | **Task 1**: run both baselines, train them, record observations | [Task 1a](#task-1a-transformer-reproduction-forda), [Task 1b](#task-1b-lstm-reproduction-jena-climate) | `experiments/transformer_official.py`, `transformer_probe.py`, `transformer_fixed.py`, `lstm_official.py` | `results/transformer/`, `results/lstm/L0_official/` |
 | **Task 2**: at least 3 meaningful modifications to one model (we chose the LSTM) | [Task 2](#task-2-lstm-improvement-benchmark) | `experiments/jena_data.py`, `lstm_benchmark.py`, `naive_baselines.py` | `results/lstm_benchmark/` |
 | **Task 3**: benchmark-style summary | [Task 3](#task-3-benchmark-summary) (the full table is in Task 2) | `experiments/aggregate_lstm.py` | `results/lstm_benchmark/summary.md`, `summary.csv`, `test_mae.png` |
 | **Task 4**: "Which model did you find easier to understand and why?" and "What improvement did you try, and what did you learn from it?" | [Task 4](#task-4-questions) | | |
 
-| Objective (spec §3) | Where |
+| Objective (spec 3) | Where |
 |---|---|
 | 1. Classification vs forecasting | [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), [Datasets](#datasets) |
 | 2. Transformer vs LSTM | [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), [Task 4](#task-4-questions) |
