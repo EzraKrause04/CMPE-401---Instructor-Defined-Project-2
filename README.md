@@ -71,7 +71,7 @@ Every experimental result in this README comes from a file under `results/`. The
 - L0_official uses seed 0.
 - Every LSTM benchmark configuration runs with seeds 0, 1 and 2. The ridge baseline's training subsample uses seed 0.
 - In the LSTM benchmark, a given seed was reproducible bit-for-bit on the T4 whenever the effective training was the same. For example, V6 and seeds 0-1 of V4a report exactly L0's test MAE, and V4b's epochs 1-4 match L0's exactly ([Task 2](#task-2-lstm-improvement-benchmark) explains why).
-- The Transformer runs were not bit-for-bit reproducible. Running them again with seed 42 changed T2 by 3 test series and moved T3's stopping epoch (see Execution notes). They use XLA (`jit_compile: true`), and no script enables deterministic GPU ops.
+- The Transformer runs were not bit-for-bit reproducible. Running them again with seed 42 changed T2 by 3 test series and moved T3's stopping epoch (see notes). They use XLA (`jit_compile: true`), and no script enables deterministic GPU ops.
 
 **Colab (how the reported results were produced).** Open [`notebooks/colab_P2.ipynb`](notebooks/colab_P2.ipynb) in Colab ([direct link](https://colab.research.google.com/github/EzraKrause04/CMPE-401---Instructor-Defined-Project-2/blob/main/notebooks/colab_P2.ipynb)), select a T4 GPU and choose **Run all**.
 - With `PERSIST_TO_DRIVE = True`, results, weights and data are kept in `MyDrive/cmpe401-p2/`.
@@ -119,14 +119,14 @@ How the scripts treat existing results:
 - LSTM benchmark: 42 runs (14 configurations × 3 seeds), 85 min of fit time.
 
 **Execution notes.**
-- *Two Colab sessions.* The laptop hosting the Colab tab went to sleep, so the notebook was finished in a second session. This does not affect the results. The runs are resumable, and each (variant, seed) run is self-contained: it sets its own seed and writes its JSON last. Every committed Transformer summary reports `sessions: 1` and no resume epoch, so no Transformer run was resumed mid-training.
+- *Two Colab sessions.* The laptop hosting the Colab tab went to sleep, so the notebook was finished in a secondary session. This did not affect the results. The runs are resumable, and each (variant, seed) run is self-contained: it sets its own seed and writes its JSON last. Every committed Transformer summary reports `sessions: 1` and no resume epoch, so no Transformer run was resumed mid-training.
 - *Duplicate Transformer execution.*
-  - A second Colab session wrote the Transformer runs to the same Drive folder, so they ran twice.
+  - A second Colab session wrote the Transformer runs to the same Drive folder, so they ran twice during testing.
   - The committed files come from one execution. We watched the other execution's summaries live but did not save them.
-  - The two agree, which works as a small reproducibility check (table below). T0 and T1 match to four decimals, T2 differs by three test series, and T3 took a different path to the same constant prediction.
+  - The two agree, which works as a small reproducibility check (seen in table below). T0 and T1 match to four decimals, T2 differs by three test series, and T3 took a different path to the same constant prediction.
   - We checked every committed run for internal consistency: `history.csv` agrees with `summary.json` on epochs run, best epoch, best validation metrics and epoch times.
 
-| Run | Test accuracy, other execution (seen live) | Test accuracy, committed | Notes |
+| Run | Test accuracy, other execution | Test accuracy, committed | Notes |
 |---|---:|---:|---|
 | T0_official | 0.5159 | 0.5159 | |
 | T1_page_version | 0.8667 | 0.8667 | |
