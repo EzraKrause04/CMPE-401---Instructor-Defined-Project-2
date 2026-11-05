@@ -405,22 +405,15 @@ For reference, the official example on its own split (L0_official) scores 2.506 
 
 ## Task 4: Questions
 
-<!-- Draft: rewrite in your own words before submitting. -->
-
 **Which model did you find easier to understand and why?**
 
-The LSTM. We could follow its data flow from start to finish: 120 hourly samples of 7 weather variables go in, and one temperature comes out, 13 hours later. Its error is in degrees Celsius, so we could compare it with forecasts anyone understands, such as "same as now" or "same as yesterday at this time". Each change we made showed up as a number we could interpret, and the training histories usually told us why. For example, validation loss dropped as soon as the learning rate was halved.
-
-The Transformer looks shorter and more modular in code, but it was harder to understand. What it actually computes depends on tensor-shape details that the code does not make visible: which axis `GlobalAveragePooling1D` averages over, which axis `LayerNormalization` normalizes over, and the fact that FordA has a single channel and is already z-normalized. We only understood T0's chance-level result after printing pooled shapes, parameter counts, gradients and weight changes, and after finding the one-argument change in the keras-io history. That investigation taught us more about attention than a working run would have. Self-attention and LayerNorm need a feature dimension to operate on, which is why time-series Transformers normally project each time step into an embedding first. We added that step in T3, although T3 still did not train with the official hyperparameters.
+The LSTM. Its setup is easy to picture: it looks at the last 120 hours of weather (7 measurements per hour) and predicts the temperature about 13 hours later, and the error is in degrees Celsius, so it was easy to tell whether a change helped. The Transformer looked simple in the code, but it didn't behave the way we expected (the current version only reaches chance-level accuracy), and it took a lot of digging into tensor shapes to understand why.
 
 **What improvement did you try, and what did you learn from it?**
 
-We tried 11 single changes to the official LSTM: width, depth, input history, epoch budget, a plateau learning-rate schedule, dropout, sentinel cleaning, calendar features and shuffling. Each ran with 3 seeds on a leak-free split with a held-out test set. We then combined the three best by validation MAE. The combined model (C1) cut test MAE from 2.43 to 1.92 °C. What we learned:
+We tried 11 changes to the LSTM, each with 3 seeds: more units, two layers, shorter and longer input history, more epochs, a learning-rate schedule, dropout, cleaning the wind-speed data, calendar features, and shuffling the training windows. Then we combined the best ones. The combined model (C1) cut the test error from 2.43 °C to 1.92 °C. The biggest surprise was that the simplest change, shuffling the training windows, helped more than making the network 4× wider, which did basically nothing. How the model is trained mattered more than its size.
 
-1. **How the model is trained mattered more than its architecture.** Shuffling the training windows (-0.45 °C) and a plateau learning-rate schedule with a 30-epoch budget (-0.46 °C vs L0; -0.37 °C vs V4a, which isolates the schedule) each did more than any change to the network. A 4× wider LSTM with 13.5× the parameters changed nothing measurable.
-2. **A simple baseline changes the conclusion.** Without the ridge regression we would have called 2.43 °C a reasonable result. A linear model on the same window scores 2.11 °C, which told us the LSTM was not using its inputs well. Only the variants that fixed the optimization beat it.
-3. **Improvements do not simply add up.** The three single gains sum to 1.17 °C, but together they gave 0.51 °C. C1's best epoch is epoch 1, so its learning-rate schedule never mattered. Shuffling had already fixed the problem the schedule was working around, and it pushed the model from being optimization-limited into overfitting. We expect regularization to be the next useful change (untested), even though it hurt (V5) in the original regime.
-4. **The evaluation setup decides what counts as an improvement.** With one seed, V4a would look like either a 0.27 °C gain or exactly no change, depending on the seed. Its entire effect comes from the one seed where early stopping did not fire. The wind-speed cleaning we expected to help (V6) changes nothing on test, because the corrupted rows are all in the validation period. It was still worth finding: it means the official example's validation score includes corrupted windows.
+We also learned how much training on a real GPU matters. One epoch of the Transformer took about 3.7 minutes on a laptop CPU but about 16 seconds on Colab's T4 GPU, which is what made running 40+ training runs practical. In our YOLO project, a rented A100 GPU was about 5× faster again than Colab's T4 (0.66 h vs 3.54 h for comparable 80-epoch runs).
 
 ## Limitations and next steps
 
