@@ -2,11 +2,11 @@
 
 **Authors:** Cole Robulack, Ezra Krause
 
-CMPE 401 (UBC Okanagan), Instructor-defined Project 2. Myself and Ezra Krause reproduced both official Keras time-series examples on a Colab T4 GPU and benchmarked controlled changes to the LSTM.
+CMPE 401 (UBC Okanagan), Instructor-defined Project 2. We reproduced both official Keras time-series examples on a Colab T4 GPU and benchmarked controlled changes to the LSTM.
 
-The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses each z-normalized series to a constant, and a LayerNorm over a single feature turns every encoder block into `x+constant`. The ~85 % accuracy published on keras.io comes from an older version in which the encoder also contributed nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
+The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses every z-normalized series to the same constant, and a LayerNorm over a single feature turns every encoder block into `x + constant`. The ~85 % accuracy published on keras.io comes from an older version in which the encoder also contributed nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
 
-For the LSTM, we moved the official model onto a leak-free train/val/test protocol. On that protocol, a ridge regression on the same inputs beats it (2.11 vs 2.43 °C test MAE). We then ran 11 single changes with 3 seeds each. Shuffling the training windows, a plateau learning-rate schedule (with a 30-epoch budget) and calendar features helped most from our testing. Combined (C1), they reach 1.92 ± 0.02 °C, which is 21% below the baseline and 9% below ridge. C1's selected weights come from epoch 1, before the schedule acts, so its result is due to shuffling and the added calendar features.
+For the LSTM, we moved the official model onto a leak-free train/val/test protocol. On that protocol, a ridge regression on the same inputs beats it (2.11 vs 2.43 °C test MAE). We then ran 11 single changes with 3 seeds each. Shuffling the training windows, a plateau learning-rate schedule (with a 30-epoch budget) and calendar features helped most on validation. Combined (C1), they reach 1.92 ± 0.02 °C, which is 21 % below the baseline and 9 % below ridge. C1's selected weights come from epoch 1, before the schedule acts, so its result is due to shuffling and the added calendar features.
 
 ## Key results
 
@@ -38,14 +38,14 @@ T1 and T2 are Task 1 diagnostics that explain T0's result, not Task 2 modificati
 
 ## Assignment map
 
-| Task (spec 5) | Section | Code | Results |
+| Task (spec section 5) | Section | Code | Results |
 |---|---|---|---|
 | **Task 1**: run both baselines, train them, record observations | [Task 1a](#task-1a-transformer-reproduction-forda), [Task 1b](#task-1b-lstm-reproduction-jena-climate) | `experiments/transformer_official.py`, `transformer_probe.py`, `transformer_fixed.py`, `lstm_official.py` | `results/transformer/`, `results/lstm/L0_official/` |
 | **Task 2**: at least 3 meaningful modifications to one model (we chose the LSTM) | [Task 2](#task-2-lstm-improvement-benchmark) | `experiments/jena_data.py`, `lstm_benchmark.py`, `naive_baselines.py` | `results/lstm_benchmark/` |
 | **Task 3**: benchmark-style summary | [Task 3](#task-3-benchmark-summary) (the full table is in Task 2) | `experiments/aggregate_lstm.py` | `results/lstm_benchmark/summary.md`, `summary.csv`, `test_mae.png` |
 | **Task 4**: "Which model did you find easier to understand and why?" and "What improvement did you try, and what did you learn from it?" | [Task 4](#task-4-questions) | | |
 
-| Objective (spec 3) | Where |
+| Objective (spec section 3) | Where |
 |---|---|
 | 1. Classification vs forecasting | [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), [Datasets](#datasets) |
 | 2. Transformer vs LSTM | [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), [Task 4](#task-4-questions) |
@@ -62,9 +62,9 @@ T1 and T2 are Task 1 diagnostics that explain T0's result, not Task 2 modificati
 | Hardware | Google Colab, NVIDIA Tesla T4 | macOS arm64, CPU only |
 | Python | 3.13.15 | 3.12 |
 | TensorFlow / Keras | 2.20.0 / 3.13.2 (Colab's preinstalled versions) | 2.21.0 / 3.15.1 (`requirements.txt`) |
-| Other | NumPy 2.1.3, pandas 2.2.3, scikit-learn 1.6.1 | see `requirements.txt` |
+| Other | NumPy 2.1.3, pandas 2.2.3, scikit-learn 1.6.1 | unpinned in `requirements.txt` |
 
-Every experimental result in this README comes from a file under `results/`. The exceptions are the other-execution column of the duplicate-run table below (observed live, not saved), figures quoted from the keras.io pages, and dataset facts computed from the raw files in `data/` (class counts, date ranges, timestamp irregularities, sentinel rows and window counts). Each run's `summary.json` or `seed*.json` records the library versions and that a GPU was used (`/device:GPU:0`). The GPU model (Tesla T4) comes from the Colab runtime (the notebook's `nvidia-smi` cell) and is not stored in the files. The Mac was used only to test the code.
+Every experimental result in this README comes from a file under `results/`. The exceptions are the other-execution column of the duplicate-run table below (observed live, not saved), figures quoted from the keras.io pages, and dataset facts computed from the raw files in `data/` (class counts, date ranges, timestamp irregularities, sentinel rows and window counts), and the timings quoted in Task 4: the laptop-CPU epoch time (observed while testing the code on the Mac, with other jobs sharing its CPU; not saved) and the YOLO training times from Project 1's report. Each run's `summary.json` or `seed*.json` records the library versions and that a GPU was used (`/device:GPU:0`). The GPU model (Tesla T4) comes from the Colab runtime (the notebook's `nvidia-smi` cell) and is not stored in the files. The Mac was used only to test the code.
 
 **Seeds.**
 - Transformer runs T0-T3 use seed 42. The seed is set before the example shuffles the training data, so all four runs use the same 2,880/721 fit/validation split.
@@ -111,7 +111,7 @@ How the scripts treat existing results:
 - `lstm_benchmark.py` skips finished (variant, seed) pairs.
 - `lstm_official.py`, `naive_baselines.py` and `aggregate_lstm.py` overwrite their outputs.
 - For quick smoke tests, use `transformer_official.py --run-name smoke --epochs 1 --max-train-samples 256` and `lstm_official.py --max-rows 60000 --epochs 2`. The first one writes to `results/transformer/smoke/` (delete it afterwards; a second smoke run needs `--overwrite`). The second one writes to `artifacts/lstm/smoke/`.
-- Training writes weights to `artifacts/`, which is git-ignored. The final weights of every reported model (except T3) are committed in [`models/`](models/README.md). `python experiments/verify_models.py` reloads them and re-scores all 45 against `results/`; they match.
+- Training writes weights to `artifacts/`, which is git-ignored. The weights of every reported model (except T3; for L0_official, the best checkpoint) are committed in [`models/`](models/README.md). `python experiments/verify_models.py` reloads 45 of them (T0-T2 and the 42 LSTM benchmark models; not L0_official) and re-scores them against `results/`; they match.
 
 **Run time.** The notebook takes about 2-3 h on a T4. From the result files:
 - Transformer runs: 52 min in total including evaluation (51 min of fit time), of which T1 alone is 41 min.
@@ -119,11 +119,11 @@ How the scripts treat existing results:
 - LSTM benchmark: 42 runs (14 configurations × 3 seeds), 85 min of fit time.
 
 **Execution notes.**
-- *Two Colab sessions.* The laptop hosting the Colab tab went to sleep, so the notebook was finished in a secondary session. This did not affect the results. The runs are resumable, and each (variant, seed) run is self-contained: it sets its own seed and writes its JSON last. Every committed Transformer summary reports `sessions: 1` and no resume epoch, so no Transformer run was resumed mid-training.
+- *Two Colab sessions.* The laptop hosting the Colab tab went to sleep, so the notebook was finished in a second session. This did not affect the results. The runs are resumable, and each (variant, seed) run is self-contained: it sets its own seed and writes its JSON last. Every committed Transformer summary reports `sessions: 1` and no resume epoch, so no Transformer run was resumed mid-training.
 - *Duplicate Transformer execution.*
-  - A second Colab session wrote the Transformer runs to the same Drive folder, so they ran twice during testing.
+  - A second Colab session wrote the Transformer runs to the same Drive folder, so they ran twice.
   - The committed files come from one execution. We watched the other execution's summaries live but did not save them.
-  - The two agree, which works as a small reproducibility check (seen in table below). T0 and T1 match to four decimals, T2 differs by three test series, and T3 took a different path to the same constant prediction.
+  - The two agree, which works as a small reproducibility check (see the table below). T0 and T1 match to four decimals, T2 differs by three test series, and T3 took a different path to the same constant prediction.
   - We checked every committed run for internal consistency: `history.csv` agrees with `summary.json` on epochs run, best epoch, best validation metrics and epoch times.
 
 | Run | Test accuracy, other execution | Test accuracy, committed | Notes |
@@ -167,11 +167,11 @@ The official example's raw-feature plot is in [`results/lstm/L0_official/raw_fea
 | Input | one series, shape (500, 1) | 120 hourly steps of 7 weather variables, shape (120, 7) |
 | Output | Dense(2, softmax): class probabilities | Dense(1): normalized temperature 13 h after the last input |
 | Loss | sparse categorical cross-entropy | mean squared error |
-| Metric | accuracy (`sparse_categorical_accuracy`) on the 1,320-series test file | MAE, which we report in °C (we add RMSE) |
+| Metric | accuracy (`sparse_categorical_accuracy`) on the 1,320-series test file | MSE, its loss (the example tracks no other metric); we report MAE and RMSE in °C |
 | Split | random: the training set is shuffled, `validation_split=0.2` holds out 20 %, and the test set is a separate file | chronological: train on 2009-2014, validate on later rows (in our benchmark, also test on later rows) |
 | Core mechanism | 4 encoder blocks, each with multi-head self-attention over all 500 steps at once (no recurrence) and a Conv1D feed-forward branch, both with LayerNorm and residuals; then pooling and an MLP head | LSTM(32) reads the 120 steps in order and carries a hidden state; its last state feeds Dense(1) |
 | Training | Adam(1e-4), batch 64, up to 150 epochs, early stopping (patience 10, restores the best weights) | Adam(1e-3), batch 256, 10 epochs, early stopping (patience 5, no restore) and a best-only checkpoint |
-| Params; time per epoch on the T4 | 29,258 (T0) / 93,130 (T1); 13.8 / 14.8 s (median) | 5,153; 57 s (official pipeline) / 11.2 s (benchmark pipeline) |
+| Params; time per epoch on the T4 | 29,258 (T0) / 93,130 (T1); 13.8 / 14.8 s (median) | 5,153; 57 s mean (official pipeline) / 11.2 s mean (benchmark pipeline) |
 
 In the official Transformer, the attention output never reaches the classifier (Task 1a explains why), so the accuracy of the page version (T1) in practice comes from an MLP on the raw series.
 
@@ -256,7 +256,7 @@ Official example: [keras.io page](https://keras.io/examples/timeseries/timeserie
 | In-memory model after `fit` = last epoch (epoch 7), which the example's plots use | 0.1413 | 2.540 | 3.246 |
 
 - Training ran 7 of 10 epochs. Validation loss was best at epoch 2 (0.138), and early stopping fired 5 epochs later. Training MSE kept falling, from 0.200 to 0.103, while validation MSE stayed between 0.141 and 0.149 after the best epoch.
-- **Comparison with the published run.** The run on the keras.io page (same official split) trained all 10 epochs. Its val MSE was best at epoch 2 (0.1423), did not improve in epochs 3-6, then improved in epochs 7-10 to 0.1267. At epoch 2 ours is slightly better (0.1376), but it never escaped that minimum and stopped at epoch 7. Our seeds show the same run-to-run difference: in the benchmark, two of three L0 seeds stop at epoch 7 after an epoch-2 minimum, and the third escapes at epoch 7 and improves up to epoch 10, like the page ([Task 2](#analysis-by-group)).
+- **Comparison with the published run.** The run on the keras.io page (same official split) trained all 10 epochs. Its val MSE reached a first minimum at epoch 2 (0.1423), did not improve in epochs 3-6, then improved in epochs 7-10 to 0.1267. At epoch 2 ours is slightly better (0.1376), but it never escaped that minimum and stopped at epoch 7. Our seeds show the same run-to-run difference: in the benchmark, two of three L0 seeds stop at epoch 7 after an epoch-2 minimum, and the third escapes at epoch 7 and improves up to epoch 10, like the page ([Task 2](#analysis-by-group)).
 - Epochs took 57 s on average (52-79 s), 6.7 min in total. The benchmark pipeline in Task 2 trains the same model in about 11 s per epoch; it uses a different input pipeline and a validation set half the size.
 - Consistency check: the per-epoch training loss matches benchmark L0 seed 0 to within 3e-5. Dropping the 78 leaked windows (observation 2 below) barely changes training.
 - The five prediction plots show single windows from the first days of the validation period. They look good, but they are anecdotal.
@@ -298,7 +298,7 @@ We chose the LSTM. Observations 2-5 above make the official validation score uns
 
 Ridge beats the official LSTM by 0.32 °C on test (2.11 vs 2.43 °C, 13.1 % lower). L0 beats the 24-hour seasonal baseline by only 0.07 °C. So the official LSTM uses its inputs less well than a linear model on the same window. Without these reference points, 2.43 °C would look like a reasonable result.
 
-**Full results** (from [`results/lstm_benchmark/summary.md`](results/lstm_benchmark/summary.md); fit time is the mean per seed on the T4)
+**Full results** (from [`results/lstm_benchmark/summary.md`](results/lstm_benchmark/summary.md); best epoch from `summary.csv`, ridge params and fit time from `naive_baselines.json`; fit time is the mean per seed on the T4)
 
 | Variant | Change vs L0 | Params | Epochs run (mean) | Best epoch (mean) | Val MAE °C | Test MAE °C | Test RMSE °C | Δ val MAE vs L0 | Δ test MAE vs L0 | Fit time (min) |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -330,9 +330,9 @@ Val caveat: at 120 h input, 732 of the 58,417 val windows (372 for V3a/C2, 1,452
 
 **The baseline's own behaviour.** Two of L0's three seeds reach their best val loss at epoch 2, then drift upward until early stopping fires at epoch 7. The third seed also stalls after epoch 2 (no improvement in epochs 3-6, one epoch short of early stopping), beats epoch 2 at epoch 7 and then improves up to the 10-epoch cap. The published keras.io run follows the same path as this third seed (Task 1b). Several variants have a large seed spread (V1a, V3b, V4a) because a run either stops at this early minimum or escapes it. With a single seed, differences of about 0.1 °C would not be interpretable.
 
-**Capacity (V1a, V1b).** Wider LSTMs did not help: V1a is not better (+0.06 °C val, within seed noise), and V1b has 13.5× the parameters for -0.01 °C. Every V1b run was still improving at the 10-epoch cap (best epoch 10 on all seeds), so its budget may have been too small. Either way, extra capacity is not what L0 is missing.
+**Capacity (V1a, V1b).** Wider LSTMs did not help: V1a is not better (+0.06 °C val, within seed noise), and V1b has 13.5× the parameters for -0.02 °C val (-0.01 °C test). Every V1b run was still improving at the 10-epoch cap (best epoch 10 on all seeds), so its budget may have been too small. Either way, extra capacity is not what L0 is missing.
 
-**Depth (V2a).** Two stacked LSTM(32) layers gave -0.09 °C (val and test), with best epochs at 9-10 (two of three seeds still improving at the cap): a modest gain at 1.8× the fit time.
+**Depth (V2a).** Two stacked LSTM(32) layers gave -0.09 °C (val and test), with best epochs at 9-10 (two of three seeds still improving at the cap): a modest gain at 1.8× the fit time, though too small to be conclusive with three seeds (see [Limitations](#limitations-and-next-steps)).
 
 **History length (V3a, V3b).** Both a shorter (60 h) and a longer (240 h) history beat 120 h by about 0.11 °C on test. V3a is the more reliable of the two: it is better by val (-0.13 vs -0.09 °C) with a smaller spread, and it trains faster (8.6 vs 15.7 s per epoch; L0: 11.2). The last 2.5 days seem to carry most of the information for a 13-h forecast. Because the effect is not monotonic in history length, we do not read more into it.
 
@@ -413,7 +413,7 @@ The LSTM. Its setup is easy to picture: it looks at the last 120 hours of weathe
 
 We tried 11 changes to the LSTM, each with 3 seeds: more units, two layers, shorter and longer input history, more epochs, a learning-rate schedule, dropout, cleaning the wind-speed data, calendar features, and shuffling the training windows. Then we combined the best ones. The combined model (C1) cut the test error from 2.43 °C to 1.92 °C. The biggest surprise was that the simplest change, shuffling the training windows, helped more than making the network 4× wider, which did basically nothing. How the model is trained mattered more than its size.
 
-We also learned how much training on a real GPU matters. One epoch of the Transformer took about 3.7 minutes on a laptop CPU but about 16 seconds on Colab's T4 GPU, which is what made running 40+ training runs practical. In our YOLO project, a rented A100 GPU was about 5× faster again than Colab's T4 (0.66 h vs 3.54 h for comparable 80-epoch runs).
+We also learned how much training on a real GPU matters. One epoch of the Transformer took about 3.7 minutes on a laptop CPU but about 15 seconds on Colab's T4 GPU, which is what made running 40+ training runs practical. In our YOLO project ([Project 1](https://github.com/EzraKrause04/CMPE-401---Instructor-Defined-Project-1/blob/main/report/REPORT.md)), an A100 GPU rented from Nebula Block was about 5× faster again than Colab's T4 (0.66 h vs 3.54 h for comparable 80-epoch runs).
 
 ## Limitations and next steps
 
@@ -446,13 +446,13 @@ experiments/
   lstm_benchmark.py            Task 2: single-change variants and --override combinations x seeds (resumable)
   naive_baselines.py           persistence, seasonal 24 h, ridge regression
   aggregate_lstm.py            Task 3: summary.csv/.md, test_mae.png, val_loss_curves.png
-  verify_models.py             reloads models/ and re-scores them against results/
+  verify_models.py             reloads models/ (all but L0_official), re-scores vs results/
 notebooks/colab_P2.ipynb       runs everything on a Colab GPU
 results/
   transformer/<run>/           T0-T3: summary.json, history.csv, curves.png, model_summary.txt
   transformer/probe.json       probe measurements (+ probe_encoder_identity.png)
   lstm/L0_official/            summary.json, history.csv, loss_curve.png, prediction_1..5.png, raw_features.png
-  lstm_benchmark/<variant>/    seed{0,1,2}.json, history_seed{0,1,2}.csv (12 registry entries + C1, C2)
+  lstm_benchmark/<variant>/    seed{0,1,2}.json, history_seed{0,1,2}.csv (L0_baseline + 11 single changes + C1, C2)
   lstm_benchmark/              naive_baselines.json, summary.csv, summary.md, test_mae.png, val_loss_curves.png
 models/                        trained weights: T0-T2, L0_official, all 42 LSTM benchmark models (see models/README.md)
 data/, artifacts/              downloaded datasets and training outputs (git-ignored)
