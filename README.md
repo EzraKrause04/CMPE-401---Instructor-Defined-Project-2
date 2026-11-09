@@ -4,9 +4,9 @@
 
 CMPE 401 (UBC Okanagan), Instructor-defined Project 2. We reproduced both official Keras time-series examples on a Colab T4 GPU and benchmarked controlled changes to the LSTM.
 
-The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses every z-normalized series to the same constant, and a LayerNorm over a single feature turns every encoder block into `x + constant`. The ~85 % accuracy published on keras.io comes from an older version in which the encoder also contributed nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
+The Transformer example as it currently stands on keras-io master trains to chance. Its test accuracy is 0.516, exactly the majority-class rate, and it puts every test series in the same class. We traced this to two shape problems that act together: pooling over time collapses every z-normalized series to the same constant, and a LayerNorm over a single feature turns every encoder block into `x + constant`. The ~85% accuracy published on keras.io comes from an older version in which the encoder also contributed nothing. Deleting the encoder gives 0.873 in 1/45 of the training time.
 
-For the LSTM, we moved the official model onto a leak-free train/val/test protocol. On that protocol, a ridge regression on the same inputs beats it (2.11 vs 2.43 °C test MAE). We then ran 11 single changes with 3 seeds each. Shuffling the training windows, a plateau learning-rate schedule (with a 30-epoch budget) and calendar features helped most on validation. Combined (C1), they reach 1.92 ± 0.02 °C, which is 21 % below the baseline and 9 % below ridge. C1's selected weights come from epoch 1, before the schedule acts, so its result is due to shuffling and the added calendar features.
+For the LSTM, we moved the official model onto a leak-free train/val/test protocol. On that protocol, a ridge regression on the same inputs beats it (2.11 vs 2.43°C test MAE). We then ran 11 single changes with 3 seeds each. Shuffling the training windows, a plateau learning-rate schedule (with a 30-epoch budget) and calendar features helped most on validation. Combined (C1), they reach 1.92 ± 0.02°C, which is 21% below the baseline and 9% below ridge. C1's selected weights come from epoch 1, before the schedule acts, so its result is due to shuffling and the added calendar features.
 
 ## Key results
 
@@ -14,7 +14,7 @@ For the LSTM, we moved the official model onto a leak-free train/val/test protoc
 |---|---|---|---|---|
 | 1 | T0: official Transformer, current keras-io code | FordA test (1,320 series) | accuracy | **0.516** (majority-class rate: 0.516) |
 | 1 (diagnostic) | T1: T0 with the pre-2024 pooling (the code that produced the output shown on keras.io) | FordA test | accuracy | 0.867 |
-| 1 (diagnostic) | T2: T1 with all four encoder blocks removed | FordA test | accuracy | 0.873 (fit in 55 s vs 41 min) |
+| 1 (diagnostic) | T2: T1 with all four encoder blocks removed | FordA test | accuracy | 0.873 (fit in 55s vs 41 min) |
 | 1 | L0_official: official LSTM, official split | official validation rows | MAE °C, best checkpoint / last epoch | 2.506 / 2.540 |
 | 2 (baseline) | L0_baseline: official LSTM on the leak-free protocol | held-out test | MAE °C, mean ± std over 3 seeds | 2.430 ± 0.027 |
 | 2 (reference) | Ridge regression on the same 120×7 input window | held-out test | MAE °C | 2.112 |
@@ -76,7 +76,7 @@ Every experimental result in this README comes from a file under `results/`. The
 **Colab (how the reported results were produced).** Open [`notebooks/colab_P2.ipynb`](notebooks/colab_P2.ipynb) in Colab ([direct link](https://colab.research.google.com/github/EzraKrause04/CMPE-401---Instructor-Defined-Project-2/blob/main/notebooks/colab_P2.ipynb)), select a T4 GPU and choose **Run all**.
 - With `PERSIST_TO_DRIVE = True`, results, weights and data are kept in `MyDrive/cmpe401-p2/`.
 - A re-run skips finished runs: an interrupted Transformer run resumes after its last completed epoch, and the LSTM benchmark continues from the last finished (variant, seed) pair.
-- The last cell zips `results/` for download.
+- The last cell zips `results/` for the user to download.
 
 **Retraining from scratch.** The committed `results/` act as finished-run markers, so **Run all** on a fresh clone skips every run and trains nothing (the notebook copies the clone's `results/` onto Drive, then skips each run whose finished-run file, such as `summary.json`, `probe.json` or `seed*.json`, exists). To retrain, move the committed results aside first: in Colab, add a cell with `!mv results results_committed` after the clone cell and use an empty Drive folder (rename or delete `MyDrive/cmpe401-p2/results`); locally, run `mv results results_committed`.
 
@@ -142,7 +142,7 @@ How the scripts treat existing results:
 | Source | UCR FordA via the URL in the example (`hfawaz/cd-diagram`); the spec describes it as automotive engine sensor data |
 | Size | 3,601 train and 1,320 test series, each 500 steps long with 1 channel |
 | Classes | labels -1/+1 mapped to 0/1; train 1,846 / 1,755, test 681 / 639 (51.6 % class 0) |
-| Split | the example shuffles the training set, then `validation_split=0.2` takes 2,880 series for fitting and 721 for validation (class 0 is 48.1 % of the validation split) |
+| Split | the example shuffles the training set, then `validation_split=0.2` takes 2,880 series for fitting and 721 for validation (class 0 is 48.1% of the validation split) |
 | Scaling | already z-normalized per series. Over all 4,921 series, the largest absolute series mean is 1.2e-8 and the sample standard deviation is 1.0000 (`probe.json`, `d_forda_series_stats`) |
 
 **Jena Climate** (forecasting, used by the LSTM example)
