@@ -365,14 +365,14 @@ A plausible mechanism: without shuffling, each batch holds 256 consecutive, heav
 - **C2** is slightly worse than C1 on both val and test, so V3a's gain does not carry over.
 - **Only V4b, V8, C1 and C2 beat ridge.** V7 alone does not.
 
-**The gains do not add up.** The single test gains of V4b, V8 and V7 sum to 1.17 °C, but C1 improves by 0.51 °C, only 0.07 °C more than V8 alone.
+**The gains do not add up.** The single test gains of V4b, V8 and V7 sum to 1.17 °C, but C1 improves by 0.51 °C, only 0.07 °C more than V8.
 - **C1's best epoch is epoch 1 on all three seeds.** Its selected weights were trained at the initial learning rate, before any plateau reduction, so the V4b ingredient (the schedule and the 30-epoch budget) never touched the selected model. In effect, C1's selected weights are those a V8 + V7 run would produce at epoch 1 (V8 + V7 was not run separately).
-- **The history files show why.** Across the seeds, C1's training MSE falls from 0.091-0.102 at epoch 1 to 0.046-0.049 at epoch 6, while val MSE rises from 0.095-0.099 to 0.117-0.132. The learning-rate halvings (from epoch 4 and from epoch 6) do not reverse it. V8 alone shows the same pattern.
+- **The history files show why.** Across the seeds, C1's training MSE falls from 0.091-0.102 at epoch 1 to 0.046-0.049 at epoch 6, while val MSE rises from 0.095-0.099 to 0.117-0.132. The learning-rate halvings (from epoch 4 and from epoch 6) do not reverse these changes. V8 alone shows the same pattern as earlier.
 - **Regime flip.** L0 was optimization-limited (see V4b). Once shuffling removed the optimization problem that the plateau schedule had been working around, the same 5k-parameter model started to **overfit** after one epoch: its training MSE keeps falling while val MSE rises. (Keras logs training MSE as a running mean over each epoch's batches, not the loss of the end-of-epoch weights, so these training values are indicative.) The schedule addresses a problem C1 no longer has. We expect regularization or a lower learning rate to be the next lever (untested; see Limitations).
 
 ## Task 3: Benchmark summary
 
-**Forecasting (Jena Climate, leak-free protocol).** The target is temperature 13 h ahead, with 120 hourly inputs. All models are scored on the same 58,417 held-out test windows (2015-11-19 to 2017-01-01). LSTMs show the mean ± std over seeds 0-2, using the best-val epoch. Improvements were chosen on val only. Rows are sorted from worst to best test MAE; the full table is in [Task 2](#task-2-lstm-improvement-benchmark). Single changes shown: the four that entered C1/C2, chosen by val MAE (V4b, V8, V7, V3a). The other seven, including the harmful V5 (+0.30 °C) and V1a, are in the Task 2 table.
+**Forecasting (Jena Climate, leak-free protocol).** The target is temperature 13 hours ahead, with 120 hourly inputs. All models are scored on the same 58,417 held-out test windows (2015-11-19 to 2017-01-01). LSTMs show the mean ± std over seeds 0-2, using the best-val epoch. Improvements were chosen on val only. Rows are sorted from worst to best test MAE; the full table is in [Task 2](#task-2-lstm-improvement-benchmark). Single changes shown: the four that entered C1/C2, chosen by val MAE (V4b, V8, V7, V3a). The other seven, including the harmful V5 (+0.30 °C) and V1a, are in the Task 2 table.
 
 | Model | Params | Test MAE °C | Test RMSE °C | Δ test MAE vs L0 | Fit time (min) |
 |---|---:|---:|---:|---:|---:|
@@ -389,7 +389,7 @@ A plausible mechanism: without shuffling, each batch holds 256 consecutive, heav
 
 For reference, the official example on its own split (L0_official) scores 2.506 °C val MAE with the best checkpoint and 2.540 °C with the model it plots. Those windows are not the benchmark's test windows, so the numbers are not directly comparable.
 
-**Classification (FordA, 1,320 test series, seed 42).** Majority-class rate: 0.516. T1-T3 are Task 1 diagnostics that explain T0's result. They are not Task 2 modifications; Task 2 is the LSTM only.
+**Classification (FordA, 1,320 test series, seed 42).** Majority-class rate: 0.516. T1-T3 are Task 1 diagnostics that explain T0's result and are not Task 2 modifications; Task 2 is the LSTM only.
 
 | Model | Params | Test acc | Fit time (min) |
 |---|---:|---:|---:|
