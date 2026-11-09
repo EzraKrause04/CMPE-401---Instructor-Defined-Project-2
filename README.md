@@ -270,10 +270,10 @@ Official example: [keras.io page](https://keras.io/examples/timeseries/timeserie
 
 **Observations about the official example.** We checked each against the code (`reference/timeseries_weather_forecasting.py`), `experiments/test_jena_windows.py` and the data.
 
-1. **The horizon is 13 h, not 12 h.** A window starting at row i reads rows i, i+6, ..., i+714 and is labelled with T at row i+792 (`past + future`). That is 78 rows (13 h) after the last input. The text says 72 time steps (12 h).
-2. **78 training windows take their labels from validation rows.** Training labels run up to row 300,770, but validation starts at row 300,693. The leak is small (78 of 299,979 windows), but it is a leak.
+1. **The horizon is 13 h, not not the stated 12 h.** A window starting at row i reads rows i, i+6, ..., i+714 and is labelled with T at row i+792 (`past + future`). That is 78 rows (13 h) after the last input. The text says 72 time steps (12 h).
+2. **78 of the training windows take their labels from validation rows.** Training labels run up to row 300,770, but validation starts at row 300,693. The leak is small (78 of 299,979 windows), but it is a leak.
 3. **There is no held-out test set.** The validation rows select the checkpoint, drive early stopping and are the only reported metric.
-4. **EarlyStopping has no `restore_best_weights`.** The model in memory after `fit`, which the example uses for its prediction plots, is the last epoch, not the best one: 2.540 vs 2.506 °C here.
+4. **EarlyStopping has no `restore_best_weights` option.** The model in memory after `fit`, which the example uses for its prediction plots, is the last epoch, not the best one: 2.540 vs 2.506 °C here.
 5. **Training windows are never shuffled.** `timeseries_dataset_from_array` defaults to `shuffle=False`, and `fit` does not shuffle a `tf.data.Dataset`. Every epoch walks through 2009-2014 in chronological batches of 256 consecutive windows.
 6. **Wind speed has missing-value sentinels.** `wv (m/s)` equals -9999 in 18 consecutive rows (13.07.2015, 09:10-12:00), all of them in validation rows. The training statistics are therefore unaffected, but after normalization each sentinel becomes about -6,549 standard deviations. 732 of the 118,352 official validation windows (0.62 %) contain one in their inputs, so the official validation MSE includes a few corrupted windows. (`max. wv` has 20 such rows but is not an input.)
 7. Minor: the text says features are confined to [0, 1], and in the next sentence (correctly, matching the code) that they are standardized by subtracting the mean and dividing by the standard deviation. Standardized values are not confined to [0, 1].
@@ -303,12 +303,12 @@ Ridge beats the official LSTM by 0.32 °C on test (2.11 vs 2.43 °C, 13.1 % lowe
 | Variant | Change vs L0 | Params | Epochs run (mean) | Best epoch (mean) | Val MAE °C | Test MAE °C | Test RMSE °C | Δ val MAE vs L0 | Δ test MAE vs L0 | Fit time (min) |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | L0_baseline | official model on this protocol | 5,153 | 8.0 | 4.7 | 2.539 ± 0.023 | 2.430 ± 0.027 | 3.105 ± 0.027 | — | — | 1.5 |
-| V1a_hidden64 | LSTM width 32 → 64 | 18,497 | 7.7 | 4.3 | 2.602 ± 0.078 | 2.506 ± 0.126 | 3.198 ± 0.174 | +0.063 (+2.5 %) | +0.076 (+3.1 %) | 1.8 |
+| V1a_hidden64 | LSTM width 32 to 64 | 18,497 | 7.7 | 4.3 | 2.602 ± 0.078 | 2.506 ± 0.126 | 3.198 ± 0.174 | +0.063 (+2.5 %) | +0.076 (+3.1 %) | 1.8 |
 | V1b_hidden128 | LSTM width 32 → 128 | 69,761 | 10.0 | 10.0 | 2.518 ± 0.062 | 2.421 ± 0.039 | 3.077 ± 0.051 | -0.021 (-0.8 %) | -0.009 (-0.4 %) | 2.8 |
 | V2a_stacked_2x32 | two stacked LSTM(32) | 13,473 | 10.0 | 9.7 | 2.451 ± 0.043 | 2.337 ± 0.066 | 2.951 ± 0.080 | -0.088 (-3.5 %) | -0.093 (-3.8 %) | 2.7 |
-| V3a_past360 | input history 120 h → 60 h | 5,153 | 10.0 | 9.7 | 2.406 ± 0.020 | 2.318 ± 0.036 | 2.954 ± 0.051 | -0.133 (-5.2 %) | -0.113 (-4.6 %) | 1.4 |
-| V3b_past1440 | input history 120 h → 240 h | 5,153 | 9.0 | 7.3 | 2.449 ± 0.064 | 2.316 ± 0.082 | 2.951 ± 0.113 | -0.090 (-3.6 %) | -0.115 (-4.7 %) | 2.4 |
-| V4a_epochs30 | epoch budget 10 → 30 | 5,153 | 14.7 | 11.0 | 2.450 ± 0.159 | 2.341 ± 0.182 | 2.993 ± 0.215 | -0.089 (-3.5 %) | -0.090 (-3.7 %) | 2.7 |
+| V3a_past360 | input history 120 h to 60 h | 5,153 | 10.0 | 9.7 | 2.406 ± 0.020 | 2.318 ± 0.036 | 2.954 ± 0.051 | -0.133 (-5.2 %) | -0.113 (-4.6 %) | 1.4 |
+| V3b_past1440 | input history 120 h to 240 h | 5,153 | 9.0 | 7.3 | 2.449 ± 0.064 | 2.316 ± 0.082 | 2.951 ± 0.113 | -0.090 (-3.6 %) | -0.115 (-4.7 %) | 2.4 |
+| V4a_epochs30 | epoch budget 10 to 30 | 5,153 | 14.7 | 11.0 | 2.450 ± 0.159 | 2.341 ± 0.182 | 2.993 ± 0.215 | -0.089 (-3.5 %) | -0.090 (-3.7 %) | 2.7 |
 | V4b_epochs30_plateau | 30 epochs + ReduceLROnPlateau (×0.5, patience 2, min_lr 1e-5) | 5,153 | 29.7 | 28.0 | 2.157 ± 0.011 | 1.966 ± 0.015 | 2.503 ± 0.015 | -0.382 (-15.1 %) | -0.464 (-19.1 %) | 5.4 |
 | V5_dropout02 | LSTM input dropout 0.2 | 5,153 | 6.0 | 1.0 | 2.828 ± 0.026 | 2.729 ± 0.029 | 3.500 ± 0.050 | +0.289 (+11.4 %) | +0.298 (+12.3 %) | 1.2 |
 | V6_clean_wv | wind-speed -9999 sentinels → 0 | 5,153 | 8.0 | 4.7 | 2.538 ± 0.024 | 2.430 ± 0.027 | 3.105 ± 0.027 | -0.001 (-0.1 %) | +0.000 (+0.0 %) | 1.5 |
