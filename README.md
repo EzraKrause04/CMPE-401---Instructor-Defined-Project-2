@@ -458,3 +458,7 @@ models/                        trained weights: T0-T2, L0_official, all 42 LSTM 
 data/, artifacts/              downloaded datasets and training outputs (git-ignored)
 requirements.txt               versions used for local testing
 ```
+
+---
+
+*AI assistance: Claude (Anthropic) was used through Claude Code to help write the code, run the experiments and draft this README; the authors directed the work.*
