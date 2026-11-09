@@ -49,7 +49,7 @@ T1 and T2 are Task 1 diagnostics that explain T0's result, not Task 2 modificati
 |---|---|
 | 1. Classification vs forecasting | [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), [Datasets](#datasets) |
 | 2. Transformer vs LSTM | [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), [Task 4](#task-4-questions) |
-| 3. Reproduce and run the official examples | [Task 1a](#task-1a-transformer-reproduction-forda), [Task 1b](#task-1b-lstm-reproduction-jena-climate) |
+| 3. Reproduce and run examples | [Task 1a](#task-1a-transformer-reproduction-forda), [Task 1b](#task-1b-lstm-reproduction-jena-climate) |
 | 4. Dataset, input, output, training process, metrics | [Datasets](#datasets), [Classification vs forecasting, Transformer vs LSTM](#classification-vs-forecasting-transformer-vs-lstm), the model descriptions in Task 1a and Task 1b |
 | 5. Small benchmark through controlled changes | [Task 2](#task-2-lstm-improvement-benchmark) |
 | 6. One reasonable improvement to one baseline | [Task 2](#task-2-lstm-improvement-benchmark) (C1) |
@@ -155,9 +155,9 @@ How the scripts treat existing results:
 | Target | `T (degC)`, standardized with training statistics (mean 9.25 °C, std 8.635 °C). MAE in °C is the normalized MAE × 8.635 |
 | Window | 120 inputs, one per hour (every 6th row of the last 720). The label is 78 rows (13 h) after the last input; see Task 1b |
 | Official split | first 71.5 % = rows 0-300,692 for training (to 17.09.2014 21:40); the remaining 119,858 rows for validation. That gives 299,979 training windows and 118,352 validation windows |
-| Benchmark split | the same training rows. The official validation rows are halved into val (rows 300,693-360,621, to 08.11.2015) and test (rows 360,622-420,550). Details are in Task 2 |
+| Benchmark split | the same training rows. The official validation rows are halved into val (rows 300,693-360,621, to 08.11.2015) and test (rows 360,622-420,550). Details can be found in Task 2 |
 
-The official example's raw-feature plot is in [`results/lstm/L0_official/raw_features.png`](results/lstm/L0_official/raw_features.png).
+The official example's raw-feature plot can be found here: [`results/lstm/L0_official/raw_features.png`](results/lstm/L0_official/raw_features.png).
 
 ## Classification vs forecasting, Transformer vs LSTM
 
